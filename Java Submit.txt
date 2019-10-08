@@ -18,7 +18,7 @@ class Functions {
         for (int i = scores.size() - 1; i >= 1; i--) {
             String temp;
             int currentMax = scores.get(0);
-            int currentMaxIndex = null;
+            int currentMaxIndex = 0;
             for (int j = 1; j <= i; j++) {
                 if (currentMax > scores.get(j)) {
                     currentMax = scores.get(j);
