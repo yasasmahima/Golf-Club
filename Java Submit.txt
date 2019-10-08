@@ -1,0 +1,337 @@
+package golfcourswork;
+
+import java.util.*;
+
+//Class Which includes all the user define Functions which use in main class(Inheritance)
+class Functions {
+
+//    Exception handling
+    void exceptionHandling(String message, Scanner input) {
+        while (!input.hasNextInt()) {
+            System.out.print(message);
+            input.next();
+        }
+    }
+
+    //User define function for sort marks and names
+    void sort_marks(ArrayList<String> names, ArrayList<Integer> scores) {
+        for (int i = scores.size() - 1; i >= 1; i--) {
+            String temp;
+            int currentMax = scores.get(0);
+            int currentMaxIndex = null;
+            for (int j = 1; j <= i; j++) {
+                if (currentMax > scores.get(j)) {
+                    currentMax = scores.get(j);
+                    currentMaxIndex = j;
+                }
+            }
+            if (currentMaxIndex != i) {
+                temp = names.get(currentMaxIndex);
+                names.set(currentMaxIndex, names.get(i));
+                names.set(i, temp);
+                scores.set(currentMaxIndex, scores.get(i));
+                scores.set(i, currentMax);
+            }
+        }
+    }
+
+    //User define function for display scores and marks
+    void print_scores(ArrayList<Integer> scores, ArrayList<String> names, int noOfGolfers) {
+        System.out.println("Golfers Name" + "\t" + "Score");
+
+        for (int i = 0; i < noOfGolfers; i++) {
+            System.out.println(names.get(i) + "\t\t" + scores.get(i));
+
+        }
+        System.out.println("----------------------------------------");
+    }
+
+    //User define function for search player by score
+    int search_score(ArrayList<Integer> scores, int score) {
+
+        for (int i = 0; i < scores.size(); i++) {
+            if (scores.get(i) == score) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    //User define function for search player by name
+    int search_name(ArrayList<String> names, String name) {
+
+        for (int i = 0; i < names.size(); i++) {
+            if (name.equals(names.get(i))) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    //User define function for check score is in the array
+    boolean check_name(ArrayList<String> names, String name) {
+        for (int i = 0; i < names.size(); i++) {
+            if (name.equals(names.get(i))) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    //User define funtion for print the options
+    void print_options() {
+        System.out.println("Select Options::");
+        System.out.println("\t1) Enter scores");
+        System.out.println("\t2) Find Golfer");
+        System.out.println("\t3) Display Scoreboard");
+        System.out.println("\t4) Exit Program");
+    }
+}
+
+//Main Class
+public class submit{
+
+    public static void main(String[] args) {
+        
+//      Exception Messages to functions
+        String invalidOption = "You have entered a non-numeric for the option. Please enter a valid number\nInput Your Option Number : ";
+        String invalidNumber = "You have entered a non-numeric for the number of golfers.please enter a number\nInput Number of Golfers in the team :";
+        String invalidMark = "You have entered a non-numeric for the marks.Please enter a valid mark\nInput Golfers Score : ";
+        String invalidOptionSearch = "You have entered a non-numeric for the option. Please enter a valid number\nEnter the Search Option : ";
+
+        Functions print = new Functions();
+        Functions checkException = new Functions();
+
+        ArrayList<Integer> scores = new ArrayList<>();
+        ArrayList<String> names = new ArrayList<>();
+
+        int noOfGolfers;
+        int totalGolfers = 0;
+
+        System.out.println("======Welcome To Springfield Golf Club======");
+        print.print_options();
+
+        System.out.print("\nInput Your Options Number : ");
+        Scanner input = new Scanner(System.in);
+
+        checkException.exceptionHandling(invalidOption, input);
+
+        int option = input.nextInt();
+
+        System.out.println("--------------------------------");
+
+        while (option != 4) {
+
+            if (1 <= option && option <= 4) {
+
+                //Enter scores option
+                if (option == 1) {
+                    System.out.print("Input Number of Golfers in the team : ");
+
+//                      
+                    checkException.exceptionHandling(invalidNumber, input);
+
+                    noOfGolfers = input.nextInt();
+                    totalGolfers += noOfGolfers;
+                    input.nextLine();
+
+                    for (int i = 0; i < noOfGolfers; i++) {
+
+                        System.out.print("Input Golfers Name : ");
+                        String name = input.next();
+                        Functions checkName = new Functions();
+                        boolean check = checkName.check_name(names, name);
+
+                        if (!check) {
+
+                            System.out.print("Input Golfers Score : ");
+
+                            checkException.exceptionHandling(invalidMark, input);
+
+                            int score = input.nextInt();
+                            if (18 <= score && score <= 108) {
+
+                                names.add(name);
+                                scores.add(score);
+
+                            } else {
+                                System.out.println("You have entered an invalid score");
+                                i -= 1;
+                            }
+
+                        } else {
+
+                            System.out.println("Sorry...This Name is already in the score board");
+                            System.out.println("Do you Want to Update the score?(Yes/No)");
+                            System.out.print("Input Yes to Update or No to Continue : ");
+                            String update = input.next();
+
+                            while (update != "Yes" || update != "No") {
+
+                                if ("Yes".equals(update)) {
+
+                                    System.out.print("Input Golfers New Score : ");
+
+                                    checkException.exceptionHandling(invalidMark, input);
+
+                                    int Update_score = input.nextInt();
+                                    if (18 <= Update_score && Update_score <= 108) {
+                                        scores.set(names.indexOf(name), Update_score);
+                                        i -= 1;
+                                        break;
+
+                                    } else {
+                                        System.out.println("You have Enterd Inavalid Score");
+                                    }
+
+                                } else {
+
+                                    if ("No".equals(update)) {
+                                        System.out.println("Continue Enter Scores");
+                                        System.out.println("-----------------------");
+                                        i -= 1;
+                                        break;
+
+                                    } else {
+                                        System.out.println("You have input an invalid Option(Please Enter Yes or No)");
+                                        System.out.print("Input Yes to Update or No to Continue : ");
+                                        update = input.next();
+                                    }
+
+                                }
+                            }
+                        }
+                    }
+
+                    print.print_options();
+
+                    System.out.print("\nInput Your Options Number : ");
+                    checkException.exceptionHandling(invalidOption, input);
+                    option = input.nextInt();
+                    System.out.println("--------------------------------");
+
+                } else {
+
+                    //Search player option
+                    if (option == 2) {
+                        if (totalGolfers > 0) {
+                            System.out.println("Search options: :");
+                            System.out.println("\t1)Search by Name");
+                            System.out.println("\t2)Search by Score");
+                            System.out.println("-------------------------");
+
+                            System.out.print("Enter the search option: ");
+                            checkException.exceptionHandling(invalidOptionSearch, input);
+                            int searchOption = input.nextInt();
+                            if (searchOption == 1 || searchOption == 2) {
+
+                                //Search by Name option
+                                if (searchOption == 1) {
+                                    System.out.print("Input Name : ");
+                                    String name = input.next();
+                                    int index;
+                                    Functions f1 = new Functions();
+                                    index = f1.search_name(names, name);
+                                    if (index > -1) {
+                                        System.out.println("Name of the Golfer: " + names.get(index) + "  Score of the golfer :" + scores.get(index));
+                                        System.out.println("--------------------------------------------------");
+                                    } else {
+                                        System.out.println("Invalid name(This Name is not in the Scoreboard)");
+                                        System.out.println("---------------------------------------------------");
+
+                                    }
+                                }
+
+                                //Search by Score option
+                                if (searchOption == 2) {
+
+                                    System.out.print("Input Golfers score : ");
+                                    checkException.exceptionHandling(invalidMark, input);
+                                    int score = input.nextInt();
+                                    int index;
+                                    Functions f2 = new Functions();
+                                    index = f2.search_score(scores, score);
+                                    if (index > -1) {
+                                        System.out.println("Name of the Golfer: " + names.get(index) + "  Score of the golfer :" + scores.get(index));
+                                        System.out.println("--------------------------------------------------");
+                                    } else {
+                                        System.out.println("Invalid Score(This Score is not in the Scoreboard)");
+                                        System.out.println("----------------------------------------------------");
+                                    }
+
+                                }
+
+                                print.print_options();
+
+                                System.out.print("\nInput Your Options Number : ");
+                                checkException.exceptionHandling(invalidOption, input);
+                                option = input.nextInt();
+                                System.out.println("--------------------------------");
+
+                            } else {
+                                System.out.println("Plz Enter a valid option to search again!!");
+                                System.out.println("----------------------------------------");
+
+                            }
+
+                        } else {
+                            System.out.println("There are no golfers to search");
+                            System.out.println("-------------------------------------");
+
+                            print.print_options();
+                            System.out.print("\nInput Your Options Number : ");
+                            checkException.exceptionHandling(invalidOption, input);
+                            option = input.nextInt();
+                            System.out.println("--------------------------------");
+                        }
+
+                    } else {
+
+                        //Display the Score board option
+                        if (option == 3) {
+
+                            Functions f3 = new Functions();
+                            f3.sort_marks(names, scores);
+
+                            if (totalGolfers > 0) {
+                                Functions S1 = new Functions();
+                                S1.print_scores(scores, names, totalGolfers);
+
+                            } else {
+                                System.out.println("There is no golfers to display");
+                                System.out.println("--------------------------------------");
+                            }
+
+                            print.print_options();
+                            System.out.print("\nInput Your Options Number : ");
+                            checkException.exceptionHandling(invalidOption, input);
+                            option = input.nextInt();
+                            System.out.println("--------------------------------");
+
+                        } else {
+                            print.print_options();
+                            System.out.print("\nInput Your Options Number : ");
+                            checkException.exceptionHandling(invalidOption, input);
+                            option = input.nextInt();
+                            System.out.println("--------------------------------");
+                        }
+
+                    }
+
+                }
+            } else {
+                System.out.println("Please Enter a Valid Option");
+                print.print_options();
+                System.out.print("\nInput Your Options Number : ");
+                checkException.exceptionHandling(invalidOption, input);
+                option = input.nextInt();
+                System.out.println("--------------------------------");
+
+            }
+        }
+
+        //End the programme Option
+        System.out.println("==================END===============");
+
+    }
+}
